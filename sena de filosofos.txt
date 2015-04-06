@@ -1,0 +1,51 @@
+//sena de filosofos        			
+#define Numerfil     5					/* numero de filosofos */
+#define LEFT         (i-1)%N				/*numero del vecino izquierdo de i*/
+#define RIGHT        (i+1)%N				/*numero del vecino derecho de i*/
+#define THINKING     0					/*el filososfo esta pensando*/
+#define HUNGRY       1					/*el folosofo intenta conseguir los tenedores*/
+#define EATING       2					/*el filosofo esta comiendo*/
+typedef int semaphores;					/*los semaforos son un caso particular de int*/
+
+int state[N]						/*arreglo para llevar un registro del estado de cada quien*/
+
+semaphore mutex=1;					/*exclusiones mutuas para las regiones criticas*/
+
+semaphore s[Numerfil];						/*semaforo para filosofo*/
+
+void philosopher(int i)					/*i: del cual el filosofo se trata desde 0 hasta N-1*/
+
+{	while(TRUE){					/*se repite siempre*/
+			thinsk();			/*el filosofo esta pensando*/
+			take_forks(i);			/*obtiene dos tenedores o se bloquea*/	
+			eat();				/*comiendo*/
+			put_forks(i);			/*coloca ambos tenedores en la mesa*/
+			}
+}
+
+void take_forks(int i)					/*i: de cual filosofo se trata desde 0 hasna N-1*/
+{
+down(&mutex);						/*entra en la region critica*/
+state [i]= HUNGRY;					/*registra el hecho de que el filosofo i tiene hambre*/
+test(i);						/*intenta tomar dos tenedores*/
+up(&mutex);						/*sale de la region critica*/
+down(%s[i]);						/*se bloquea si no consigue los tenedores*/
+}
+
+void put_forks(int i)					/*i:de cual filosofo se trata desde 0 hasta N-1*/
+{
+down(&mutex);						/*entra en la region critica*/
+state[i]=THINKING;					/*el filosofo ha terminado de comer*/
+test(LEFT);						/*ve si el vecino de la izquierda puede comer*/
+
+test(RINGHT);						/*ve si el vecino de la derecha puede comer*/
+up(&mutex);						/*sale de la region critica*/
+}
+
+void test(int i)					/*i: de cual filosofo se trata desde 0 hasta N-1*/
+{
+if(state[i]==HUNGRY && state(LEFT) != EATING && state[RIGHT] != EATING){			/**/
+									state[i]== EATING;
+									up(&a[i]);
+									}
+}
